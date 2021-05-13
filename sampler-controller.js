@@ -6,47 +6,47 @@ export default class SamplerController {
     this.sampler = new Sampler()
     this.samples = this.sampler.samples
     this.render()
-    
+
     this.samplingTarget = document.getElementById('sampling')
     this.loopTarget = document.getElementById('loop')
     this.clearTarget = document.getElementById('clear')
     this.durationTarget = document.getElementById('duration')
     this.activeTarget = document.getElementById('active')
-  
+
     this.sampler.activeCount = parseInt(this.activeTarget.value)
     this.sampler.loop = this.loopTarget.checked
-    
+
     this.samplingTarget.onchange = async () => {
       await this.sampler.stream
       this.samplingTarget.checked ? this.sampler.startSampling() : this.sampler.stopSampling()
     }
-    
+
     this.loopTarget.onchange = () => {
       this.loopTarget.checked ? this.sampler.startLooping() : this.sampler.stopLooping()
     }
-    
+
     this.clearTarget.onclick = () => this.samples.forEach(sample => sample.clear())
-    
+
     this.durationTarget.onchange = () => {
       this.sampler.setDuration(this.durationTarget.value)
     }
-    
+
     this.activeTarget.onchange = () => {
       const before = this.sampler.activeCount
       this.sampler.activeCount = parseInt(this.activeTarget.value)
       if (this.sampler.activeCount > before) {
         for (let i = before; i < this.sampler.activeCount; i++) {
           if (!this.samples[i].empty) this.samples[i].play({ loop: true })
-        } 
+        }
       } else {
         for (let i = this.sampler.activeCount; i < before; i++) {
           this.samples[i].stop()
           this.samples[i].abortRecording()
-        } 
+        }
       }
     }
   }
-  
+
   render () {
     const container = document.getElementById('samples')
     this.sampleTargets = this.samples.map((sample) => {

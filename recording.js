@@ -10,25 +10,25 @@ export default class Recording {
       this.blobify()
     })
   }
-  
+
   start (timeslice) {
     this.recorder.start(timeslice)
   }
-  
+
   chunk (data) {
     this.chunks.push(data)
   }
-  
+
   blobify () {
     if (!this.aborted) {
       this.delegate.recordingCompleted(new Blob(this.chunks))
     }
   }
-  
+
   stop () {
     this.recorder.stop()
   }
-  
+
   abort () {
     this.aborted = true
     this.stop()
