@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+    <title>autosampler</title>
+
+    <meta name="description" content="A port of Yann Seznec's auto_sampler for the Web" />
+    <meta name="robots" content="index,follow" />
+    <meta property="og:title" content="autosampler" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="" />
+    <meta property="og:description" content="A port of Yann Seznec's auto_sampler for the Web" />
+    <meta property="og:image" content="" />
+    <meta name="twitter:card" content="summary" />
+
+    <link href="https://api.fontshare.com/css?f[]=clash-grotesk@1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css" />
+
+    <script src="https://unpkg.com/event-target@latest/min.js"></script>
+    <script src="./audio-cron.js" defer type="module"></script>
+    <script src="./recording.js" defer type="module"></script>
+    <script src="./sample.js" defer type="module"></script>
+    <script src="./sampler-controller.js" defer type="module"></script>
+    <script src="./sample-controller.js" defer type="module"></script>
+    <script defer type="module">
+      if ('MediaRecorder' in window) {
+        document.getElementById('controls').style.display = ''
+        document.getElementById('samples').style.display = ''
+      } else {
+        document.getElementById('not_supported').hidden = false
+      }
+
+      import SamplerController from '/sampler-controller.js'
+      new SamplerController()
+    </script>
+  </head>
+  <body>
+    <div id="not_supported" hidden>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <p>Sorry, your browser does not support the required MediaRecorder feature.</p>
+      <p>Some Safari versions have experimental support.<br>To enable on macOS: in Preferences - Advanced - check Show Develop Menu. Then from the Develop menu choose: Experimental Features - MediaRecorder</p>
+      <p>On iOS enable MediaRecorder: in Settings - Safari - Advanced - Experimental Features - MediaRecorder</p>
+    </div>
+    <div id="controls" class="controls" style="display: none">
+      <label for="sampling">
+        <input type="checkbox" class="sr-only" id="sampling" autocomplete="off">
+        <span class="toggle toggle--sample">
+          <span class="toggle__handle"></span>
+        </span>
+        Sample
+      </label>
+
+      <label for="loop">
+        <input type="checkbox" checked class="sr-only" id="loop" autocomplete="off">
+        <span class="toggle toggle--loop">
+          <span class="toggle__handle"></span>
+        </span>
+        Loop
+      </label>
+
+      <label for="duration">
+        <div class="select">
+          <select id="duration" autocomplete="off">
+            <option value="0.5">0.5s</option>
+            <option value="1">1s</option>
+            <option value="2">2s</option>
+            <option value="5" selected>5s</option>
+            <option value="10">10s</option>
+          </select>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        Duration
+      </label>
+
+      <label for="active">
+        <div class="select">
+          <select id="active" autocomplete="off">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12" selected>12</option>
+          </select>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+        </div>
+        Active
+      </label>
+
+      <button id="clear" style="margin-left: auto;">Clear</button>
+    </div>
+
+    <ul id="samples" style="display: none;"></ul>
+  </body>
+</html>
